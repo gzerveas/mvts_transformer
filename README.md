@@ -1,5 +1,20 @@
 # Multivariate Time Series Transformer Framework
 
+This code corresponds to the paper: George Zerveas et al. **A Transformer-based Framework for Multivariate Time Series Representation Learning**, in _Proceedings of the 27th ACM SIGKDD Conference on Knowledge Discovery and Data Mining (KDD '21), August 14-18, 2021_.
+https://arxiv.org/abs/2010.02803
+
+If you find this code or any of the ideas in the paper useful, please consider citing:
+```buildoutcfg
+@misc{zerveas2020transformerbased,
+    title={A Transformer-based Framework for Multivariate Time Series Representation Learning},
+    author={George Zerveas and Srideepika Jayaraman and Dhaval Patel and Anuradha Bhamidipaty and Carsten Eickhoff},
+    year={2020},
+    eprint={2010.02803},
+    archivePrefix={arXiv},
+    primaryClass={cs.LG}
+}
+```
+
 ## Setup
 
 _Instructions refer to Unix-based systems (e.g. Linux, MacOS)._
