@@ -39,6 +39,8 @@ install packages and avoid conficting package requirements; otherwise, to run `p
 
 `pip install -r requirements.txt`
 
+\[Note: Because sometimes newer versions of packages break backward compatibility with previous versions or other packages, instead or `requirements.txt` you can use `failsafe_requirements.txt` to use the versions which have been tested to work with this codebase.\] 
+
 Download dataset files and place them in separate directories, one for regression and one for classification.
 
 Classification: http://www.timeseriesclassification.com/Downloads/Archives/Multivariate2018_ts.zip
@@ -83,6 +85,9 @@ python src/main.py --output_dir experiments --comment "classification from Scrat
 ## Pre-train models (unsupervised learning through input masking)
 
 Can be used for any downstream task, e.g. regression, classification, imputation.
+
+Make sure that the network architecture parameters of the pretrained model match the parameters of the desired fine-tuned model (e.g. use `--d_model 64` for `SpokenArabicDigits`).
+
 ```bash
 python src/main.py --output_dir experiments --comment "pretraining through imputation" --name $1_pretrained --records_file Imputation_records.xls --data_dir /path/to/$1/ --data_class tsra --pattern TRAIN --val_ratio 0.2 --epochs 700 --lr 0.001 --optimizer RAdam --batch_size 32 --pos_encoding learnable --d_model 128
 ```
