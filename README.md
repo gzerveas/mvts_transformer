@@ -26,16 +26,46 @@ model checkpoints, performance metrics per epoch, predictions per sample, the ex
 The following commands assume that you have created a new root directory inside the project directory like this: 
 `mkdir experiments`.
 
+This code has been tested with `Python 3.7` and `3.8`.
+
 [We recommend creating and activating a `conda` or other Python virtual environment (e.g. `virtualenv`) to 
 install packages and avoid conficting package requirements; otherwise, to run `pip`, the flag `--user` or `sudo` privileges will be necessary.]
 
 `pip install -r requirements.txt`
+
+[Note: Because sometimes newer versions of packages (e.g. `sktime`) break backward compatibility with previous versions or other packages, 
+if you are encountering issues, you can instead use `failsafe_requirements.txt`, which contains specific versions 
+of packages tested to work with this codebase.] 
+
+### Get data from TS Archive
 
 Download dataset files and place them in separate directories, one for regression and one for classification.
 
 Classification: http://www.timeseriesclassification.com/Downloads/Archives/Multivariate2018_ts.zip
 
 Regression: https://zenodo.org/record/3902651#.YB5P0OpOm3s
+
+### Adding your own datasets
+
+To train and evaluate on your own data, you have to add a new data class in `datasets/data.py`.
+You can see other examples for data classes in that file, or the template in `example_data_class.py`.
+
+The data class sets up one or more `pandas` `DataFrame`(s) containing all data, indexed by example IDs.
+Depending on the task, these dataframes are accessed by the Pytorch `Dataset` subclasses in `dataset.py`.
+
+For example, autoregressive tasks (e.g. imputation, transduction) require a member dataframe `self.feature_df`, 
+while regression and classification (implemented through `ClassiregressionDataset`) additionally require a `self.labels_df` member
+variable to be defined inside the data class in `data.py`.
+
+Once you write your data class, you must add a string identifier for it in the `data_factory` dictionary inside `data.py`:
+```python
+data_factory = {'weld': WeldData,
+                'tsra': TSRegressionArchive,
+                'pmu': PMUData,
+                'mydataset': MyNewDataClass}
+```
+
+You can now train and evaluate using your own dataset through the option `--data_class mydataset`.
 
 ## Example commands
 
