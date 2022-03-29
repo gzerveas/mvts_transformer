@@ -182,7 +182,7 @@ def main(config):
     loss_module = get_loss_module(config)
 
     if config['test_only'] == 'testset':  # Only evaluate and skip training
-        dataset_class, collate_fn, runner_class = pipeline_factory(config['task'])
+        dataset_class, collate_fn, runner_class = pipeline_factory(config)
         test_dataset = dataset_class(test_data, test_indices)
 
         test_loader = DataLoader(dataset=test_dataset,
