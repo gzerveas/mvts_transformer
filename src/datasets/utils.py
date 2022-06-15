@@ -91,6 +91,7 @@ def load_from_tsfile_to_dataframe(full_file_path_and_name, return_separate_X_and
     instance_list = []
     class_val_list = []
     line_num = 0
+    target_labels = False
 
     # Parse the file
     # print(full_file_path_and_name)
