@@ -292,8 +292,12 @@ class TSRegressionArchive(BaseData):
             labels_df = pd.DataFrame(labels.cat.codes, dtype=np.int8)  # int8-32 gives an error when using nn.CrossEntropyLoss
         else:  # e.g. imputation
             try:
-                df, labels = load_data.load_from_tsfile_to_dataframe(filepath, return_separate_X_and_y=True,
+                data = load_data.load_from_tsfile_to_dataframe(filepath, return_separate_X_and_y=True,
                                                                      replace_missing_vals_with='NaN')
+                if isinstance(data, tuple):
+                    df, labels = data
+                else:
+                    df = data
             except:
                 df, _ = utils.load_from_tsfile_to_dataframe(filepath, return_separate_X_and_y=True,
                                                                  replace_missing_vals_with='NaN')
