@@ -82,7 +82,7 @@ To see all command options with explanations, run: `python src/main.py --help`
 You should replace `$1` below with the name of the desired dataset.
 The commands shown here specify configurations intended for `BeijingPM25Quality` for regression and `SpokenArabicDigits` for classification.
 
-_[To obtain best performance for other datasets, use the hyperparameters as given in the Supplementary Material of the paper.
+_[To obtain best performance for other datasets, *use the hyperparameters as given in the Supplementary Material of the paper*. For example, for self-supervised pretraining of `BeijingPM25Quality`, the correct batch size is 128.
 Appropriate downsampling with the option `--subsample_factor` can be often used on datasets with longer time series to speedup training, without significant
 performance degradation.]_
 
@@ -119,6 +119,8 @@ Make sure that the network architecture parameters of the pretrained model match
 ```bash
 python src/main.py --output_dir experiments --comment "pretraining through imputation" --name $1_pretrained --records_file Imputation_records.xls --data_dir /path/to/$1/ --data_class tsra --pattern TRAIN --val_ratio 0.2 --epochs 700 --lr 0.001 --optimizer RAdam --batch_size 32 --pos_encoding learnable --d_model 128
 ```
+
+As noted above, please check the paper for the optimal hyperparameter values for each dataset. E.g. for pretraining on `BeijingPM25Quality`, one should use `--batch_size 128`.
 
 ## Fine-tune pretrained models
 
