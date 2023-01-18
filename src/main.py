@@ -191,14 +191,24 @@ def main(config):
                                  num_workers=config['num_workers'],
                                  pin_memory=True,
                                  collate_fn=lambda x: collate_fn(x, max_len=model.max_len))
-        test_evaluator = runner_class(model, test_loader, device, loss_module,
+        
+        if config['extract_embeddings_only']:
+            embeddings_extractor = runner_class(model, test_loader, device, loss_module,
                                             print_interval=config['print_interval'], console=config['console'])
-        aggr_metrics_test, per_batch_test = test_evaluator.evaluate(keep_all=True)
-        print_str = 'Test Summary: '
-        for k, v in aggr_metrics_test.items():
-            print_str += '{}: {:8f} | '.format(k, v)
-        logger.info(print_str)
-        return
+            with torch.no_grad():
+                embeddings = embeddings_extractor.extract_embeddings(keep_all=True)
+                embeddings_filepath = os.path.join(os.path.join(config["output_dir"] + "/embeddings.pt"))
+                torch.save(embeddings, embeddings_filepath)
+            return
+        else:
+            test_evaluator = runner_class(model, test_loader, device, loss_module,
+                                                print_interval=config['print_interval'], console=config['console'])
+            aggr_metrics_test, per_batch_test = test_evaluator.evaluate(keep_all=True)
+            print_str = 'Test Summary: '
+            for k, v in aggr_metrics_test.items():
+                print_str += '{}: {:8f} | '.format(k, v)
+            logger.info(print_str)
+            return
     
     # Initialize data generators
     dataset_class, collate_fn, runner_class = pipeline_factory(config)
