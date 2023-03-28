@@ -86,7 +86,7 @@ class Normalizer(object):
             raise (NameError(f'Normalize method "{self.norm_type}" not implemented'))
 
     def inverse_normalize(self, df:pd.DataFrame=None):
-        """reverses the transformation done with the method that was used 
+        """reverses the transformation done with the method that was used normalize function above.
 
         Args:
             df (_type_): dataFrame with the same names as that was given earlier
