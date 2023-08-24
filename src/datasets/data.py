@@ -9,9 +9,8 @@ from itertools import repeat, chain
 import numpy as np
 import pandas as pd
 from tqdm import tqdm
-from sktime.datasets import load_from_tsfile_to_dataframe
 
-from datasets import utils
+from .utils import load_from_tsfile_to_dataframe
 
 logger = logging.getLogger('__main__')
 
