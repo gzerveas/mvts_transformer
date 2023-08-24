@@ -9,7 +9,7 @@ from itertools import repeat, chain
 import numpy as np
 import pandas as pd
 from tqdm import tqdm
-from sktime.utils import load_data
+from sktime.datasets import load_from_tsfile_to_dataframe
 
 from datasets import utils
 
@@ -283,10 +283,10 @@ class TSRegressionArchive(BaseData):
         # Every row of the returned df corresponds to a sample;
         # every column is a pd.Series indexed by timestamp and corresponds to a different dimension (feature)
         if self.config['task'] == 'regression':
-            df, labels = utils.load_from_tsfile_to_dataframe(filepath, return_separate_X_and_y=True, replace_missing_vals_with='NaN')
+            df, labels = load_from_tsfile_to_dataframe(filepath, return_separate_X_and_y=True, replace_missing_vals_with='NaN')
             labels_df = pd.DataFrame(labels, dtype=np.float32)
         elif self.config['task'] == 'classification':
-            df, labels = load_data.load_from_tsfile_to_dataframe(filepath, return_separate_X_and_y=True, replace_missing_vals_with='NaN')
+            df, labels = load_from_tsfile_to_dataframe(filepath, return_separate_X_and_y=True, replace_missing_vals_with='NaN')
             labels = pd.Series(labels, dtype="category")
             self.class_names = labels.cat.categories
             labels_df = pd.DataFrame(labels.cat.codes, dtype=np.int8)  # int8-32 gives an error when using nn.CrossEntropyLoss
@@ -299,7 +299,7 @@ class TSRegressionArchive(BaseData):
                 else:
                     df = data
             except:
-                df, _ = utils.load_from_tsfile_to_dataframe(filepath, return_separate_X_and_y=True,
+                df, _ = load_from_tsfile_to_dataframe(filepath, return_separate_X_and_y=True,
                                                                  replace_missing_vals_with='NaN')
             labels_df = None
 
