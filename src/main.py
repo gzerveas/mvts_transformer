@@ -193,10 +193,12 @@ def main(config):
                                  collate_fn=lambda x: collate_fn(x, max_len=model.max_len))
         test_evaluator = runner_class(model, test_loader, device, loss_module,
                                             print_interval=config['print_interval'], console=config['console'])
-        aggr_metrics_test, per_batch_test = test_evaluator.evaluate(keep_all=True)
+        with torch.no_grad():
+            aggr_metrics_test, per_batch_test = test_evaluator.evaluate(keep_all=True)
         print_str = 'Test Summary: '
         for k, v in aggr_metrics_test.items():
-            print_str += '{}: {:8f} | '.format(k, v)
+            if v is not None:
+                print_str += '{}: {:8f} | '.format(k, v)
         logger.info(print_str)
         return
     
