@@ -284,7 +284,7 @@ class UnsupervisedRunner(BaseRunner):
             target_masks = target_masks.to(self.device)  # 1s: mask and predict, 0s: unaffected input (ignore)
             padding_masks = padding_masks.to(self.device)  # 0s: ignore
 
-            predictions = self.model(X.to(self.device), padding_masks)  # (batch_size, padded_length, feat_dim)
+            predictions, embedding = self.model(X.to(self.device), padding_masks)  # (batch_size, padded_length, feat_dim)
 
             # Cascade noise masks (batch_size, padded_length, feat_dim) and padding masks (batch_size, padded_length)
             target_masks = target_masks * padding_masks.unsqueeze(-1)
@@ -343,7 +343,7 @@ class UnsupervisedRunner(BaseRunner):
             #
             # utils.check_model(self.model, verbose=False, stop_on_error=True)
 
-            predictions = self.model(X.to(self.device), padding_masks)  # (batch_size, padded_length, feat_dim)
+            predictions, embedding = self.model(X.to(self.device), padding_masks)  # (batch_size, padded_length, feat_dim)
 
             # Cascade noise masks (batch_size, padded_length, feat_dim) and padding masks (batch_size, padded_length)
             target_masks = target_masks * padding_masks.unsqueeze(-1)
@@ -375,6 +375,28 @@ class UnsupervisedRunner(BaseRunner):
         else:
             return self.epoch_metrics
 
+    def extract_embeddings(self, epoch_num=None, keep_all=True):
+
+        self.model = self.model.eval()
+
+        if keep_all:
+            per_batch = {'embeddings': []}
+        for i, batch in enumerate(self.dataloader):
+
+            X, targets, target_masks, padding_masks, IDs = batch
+            targets = targets.to(self.device)
+            target_masks = target_masks.to(self.device)  # 1s: mask and predict, 0s: unaffected input (ignore)
+            padding_masks = padding_masks.to(self.device)  # 0s: ignore
+
+            predictions, embedding = self.model(X.to(self.device), padding_masks)  # (batch_size, padded_length, feat_dim)
+
+            if keep_all:
+                per_batch['embeddings'].append(embedding.cpu().numpy())
+
+        if keep_all:
+            return per_batch
+        else:
+            return self.epoch_metrics
 
 class SupervisedRunner(BaseRunner):
 

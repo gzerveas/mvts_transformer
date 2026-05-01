@@ -163,6 +163,10 @@ class Options(object):
         self.parser.add_argument('--normalization_layer', choices={'BatchNorm', 'LayerNorm'}, default='BatchNorm',
                                  help='Normalization layer to be used internally in transformer encoder')
 
+        # Testing process
+        self.parser.add_argument('--extract_embeddings_only', default='raw',
+                                 help="""If given, will only extract emneddings for the provided test data.""")
+
     def parse(self):
 
         args = self.parser.parse_args()

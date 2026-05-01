@@ -117,7 +117,15 @@ Can be used for any downstream task, e.g. regression, classification, imputation
 Make sure that the network architecture parameters of the pretrained model match the parameters of the desired fine-tuned model (e.g. use `--d_model 64` for `SpokenArabicDigits`).
 
 ```bash
-python src/main.py --output_dir experiments --comment "pretraining through imputation" --name $1_pretrained --records_file Imputation_records.xls --data_dir /path/to/$1/ --data_class tsra --pattern TRAIN --val_ratio 0.2 --epochs 700 --lr 0.001 --optimizer RAdam --batch_size 32 --pos_encoding learnable --d_model 128
+python src/main.py --output_dir experiments --comment "extract embedding after unsupervised pretraining" --name $1_pretrained --records_file Imputation_records.xls --data_dir /path/to/$1/ --data_class tsra --val_ratio 0 --batch_size 32 --d_model 128 --test_only=testset --load_model=path/to/$1_pretrained/checkpoints/model_best.pth
+```
+
+### Extract embeddings from unsupervised pretrained model
+
+Can be used to extract embeddings after unsupervsied pretraining for time series representation. The results time series representations can be used as features for other machine learning model.
+
+```bash
+python src/main.py --output_dir experiments --comment "pretraining through imputation" --name $1_pretrained --records_file Imputation_records.xls --data_dir /path/to/$1/ --data_class tsra --pattern TRAIN --val_ratio 0.2 --epochs 700 --lr 0.001 --optimizer RAdam --batch_size 32 --pos_encoding learnable --d_model 128  --extract_embeddings_only raw
 ```
 
 As noted above, please check the paper for the optimal hyperparameter values for each dataset. E.g. for pretraining on `BeijingPM25Quality`, one should use `--batch_size 128`.
